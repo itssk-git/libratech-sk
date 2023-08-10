@@ -1,0 +1,58 @@
+For a proper folder structure in a Vanilla PHP-based Library Management System (LMS), you can consider the following structure:
+
+assets/
+
+css/
+js/
+images/
+includes/
+
+header.php
+footer.php
+sidebar.php
+database.php
+functions.php
+session.php
+authentication.php
+pages/
+
+home.php
+books.php
+members.php
+borrowings.php
+reservations.php
+admin/
+
+login.php
+dashboard.php
+manage_books.php
+manage_members.php
+manage_borrowings.php
+manage_reservations.php
+user/
+
+login.php
+dashboard.php
+profile.php
+borrow_books.php
+manage_borrowings.php
+manage_reservations.php
+config/
+
+config.php
+index.php
+
+login.php
+
+logout.php
+
+Let's explain the purpose of each folder and file:
+
+The "assets" folder holds CSS, JavaScript, and image files for styling and functionality.
+The "includes" folder contains reusable code snippets and files, such as header, footer, sidebar, database connection, session management, and authentication-related files.
+The "pages" folder contains individual PHP files for different pages of the LMS, such as home, books, members, borrowings, and reservations.
+The "admin" folder includes PHP files specific to the admin section of the LMS, such as login, dashboard, and management pages for books, members, borrowings, and reservations.
+The "user" folder contains PHP files for user-specific functionalities, such as user login, dashboard, profile management, and managing borrowings and reservations.
+The "config" folder holds the configuration file (e.g., database credentials) used by the LMS.
+The root directory includes the main files, such as index.php (the entry point), login.php (the login page), and logout.php (the logout functionality).
+This folder structure separates concerns, keeps related files organized, and promotes reusability. You can modify and expand this structure based on the specific requirements and complexity of your LMS project.

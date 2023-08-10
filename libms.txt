@@ -1,0 +1,139 @@
+Books
+
+book_id (primary key)
+title
+author
+publication_date
+ISBN
+quantity_available
+Authors
+
+author_id (primary key)
+name
+nationality
+birth_date
+Publications
+
+publication_id (primary key)
+name
+address
+contact_number
+Categories
+
+category_id (primary key)
+name
+Books_Categories (Many-to-Many Relationship Table)
+
+book_id (foreign key referencing Books)
+category_id (foreign key referencing Categories)
+Members
+
+member_id (primary key)
+name
+address
+contact_number
+email
+join_date
+Borrowings
+
+borrowing_id (primary key)
+book_id (foreign key referencing Books)
+member_id (foreign key referencing Members)
+borrowing_date
+due_date
+return_date
+Reservations
+
+reservation_id (primary key)
+book_id (foreign key referencing Books)
+member_id (foreign key referencing Members)
+reservation_date
+Fine
+
+fine_id (primary key)
+member_id (foreign key referencing Members)
+amount
+paid_status
+fine_date
+Librarians
+
+librarian_id (primary key)
+name
+address
+contact_number
+email
+hire_date
+
+
+
+
+
+
+
+
+/////
+Books
+
+book_id (primary key, auto-increment): A unique identifier for each book in the library.
+title: The title of the book.
+author: The name of the book's author.
+publication_date: The date when the book was published.
+ISBN: The International Standard Book Number for the book.
+quantity_available: The number of copies available for borrowing.
+Authors
+
+author_id (primary key, auto-increment): A unique identifier for each author.
+name: The name of the author.
+nationality: The nationality of the author.
+birth_date: The birth date of the author.
+Publications
+
+publication_id (primary key, auto-increment): A unique identifier for each publication.
+name: The name of the publication.
+address: The address of the publication.
+contact_number: The contact number of the publication.
+Categories
+
+category_id (primary key, auto-increment): A unique identifier for each category.
+name: The name of the category.
+Books_Categories (Many-to-Many Relationship Table)
+
+book_id (foreign key referencing Books): The book ID related to a specific category.
+category_id (foreign key referencing Categories): The category ID related to a specific book.
+Members
+
+member_id (primary key, auto-increment): A unique identifier for each member.
+name: The name of the member.
+address: The address of the member.
+contact_number: The contact number of the member.
+email: The email address of the member.
+join_date: The date when the member joined the library.
+Borrowings
+
+borrowing_id (primary key, auto-increment): A unique identifier for each borrowing transaction.
+book_id (foreign key referencing Books): The book ID associated with the borrowing.
+member_id (foreign key referencing Members): The member ID associated with the borrowing.
+borrowing_date: The date when the book was borrowed.
+due_date: The date when the borrowed book is due for return.
+return_date: The date when the book was returned.
+Reservations
+
+reservation_id (primary key, auto-increment): A unique identifier for each reservation.
+book_id (foreign key referencing Books): The book ID associated with the reservation.
+member_id (foreign key referencing Members): The member ID associated with the reservation.
+reservation_date: The date when the reservation was made.
+Fine
+
+fine_id (primary key, auto-increment): A unique identifier for each fine.
+member_id (foreign key referencing Members): The member ID associated with the fine.
+amount: The amount of the fine.
+paid_status: A flag indicating whether the fine has been paid or not.
+fine_date: The date when the fine was imposed.
+Librarians
+
+librarian_id (primary key, auto-increment): A unique identifier for each librarian.
+name: The name of the librarian.
+address: The address of the librarian.
+contact_number: The contact number of the librarian.
+email: The email address of the librarian.
+hire_date: The date when the librarian was hired.

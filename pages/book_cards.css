@@ -1,0 +1,111 @@
+.success-message{
+    color:#088178;
+}
+.error-message{
+    color:red;
+}
+
+
+
+#book1
+{
+width:25%;
+text-align: center;
+}
+
+#book1 .book-container
+{
+display: flex;
+justify-content: space-between;
+flex-wrap: wrap;
+
+}
+
+#book1 .book
+{
+
+width: 23%;
+min-width: 250px;
+padding: 10px 20px;
+border: 1px solid #cce7d0;
+border-radius: 25px;
+cursor: pointer;
+box-shadow: 20px 20px 30px rgba(0, 0, 0, 0.02);
+margin: 15px 0;
+transition: 0.2s ease;
+position: relative;
+height: 440px;
+}
+
+#book1 .book:hover
+{
+box-shadow: 20px 20px 30px rgba(0, 0, 0, 0.08);
+}
+
+#book1 .book a
+{
+text-decoration: none;
+}
+
+#book1 .book span
+{
+color: #252424;
+padding-bottom: 10px;
+}
+
+#book1 .book img
+{
+width: 100%;
+border-radius: 20px;
+height:270px;
+}
+
+#book1 .book .des
+{
+text-align: start;
+padding: 10px 0;
+
+}
+
+#book1 .book .des span .s1
+{
+color: #1b1b1c;
+font-size: 15px;
+}
+
+#book1 .book .des h5
+{
+/* padding: 2px; */
+color: #1a1a1a;
+font-size: 14px;
+}
+
+#book1 .book .des i
+{
+font-size: 12px;
+color: rgb(243, 181, 25);
+}
+
+#book1 .book .des h4
+{
+/* padding: 7px; */
+font-size: 15px;
+font-weight: 700;
+color: #009688;
+
+}
+
+#book1 .book .cart 
+{
+width: 40px;
+height: 40px;
+line-height: 40px;
+border-radius: 50px;
+background-color: #e8f6ea;
+font-weight: 500;
+color: #009688;
+border: 1px solid #cce7d0;
+position: absolute;
+bottom: 20px;
+right: 17px;
+}
