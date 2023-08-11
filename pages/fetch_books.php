@@ -1,8 +1,13 @@
 <?php
 require_once '../includes/connection.php';
 
-$sql = "SELECT * FROM books WHERE quantity_available > 0 
-ORDER BY book_id LIMIT 4";
+$sql = "SELECT b.*, c.name AS category_name, p.name AS publisher_name
+        FROM books AS b
+      JOIN category AS c ON b.category_id = c.category_id
+         JOIN publisher AS p ON b.publisher_id = p.publisher_id
+        WHERE b.quantity_available > 0 
+        ORDER BY b.book_id LIMIT 4";
+
 $result = $conn->query($sql);
 
 $books = array();

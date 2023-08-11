@@ -20,20 +20,21 @@ if (isset($_GET['request_id'])) {
                 $row = $result_request->fetch_assoc();
                 $book_id = $row['book_id'];
                 $member_id = $row['member_id'];
+                date_default_timezone_set('Asia/Kathmandu');
 
-                // Get the current date and time
-                $issue_date = date('Y-m-d H:i:s');
-
+                // Get the current time in Nepal Time
+                $issue_date_npt = date('Y-m-d H:i:s');
+                
                 // Add 30 days to the issue date
-                $due_date = date('Y-m-d H:i:s', strtotime($issue_date . ' +30 days'));
-
-                // Convert issue_date and due_date to the appropriate format for the database
-                $issue_date_db = (new DateTime($issue_date))->format('Y-m-d H:i:s');
-                $due_date_db = (new DateTime($due_date))->format('Y-m-d H:i:s');
-
+                $due_date_npt = date('Y-m-d H:i:s', strtotime($issue_date_npt . ' +30 days'));
+                
+                // Format the converted dates in Nepal Time for database insertion
+                $issue_date_db_nepal = (new DateTime($issue_date_npt))->format('Y-m-d H:i:s');
+                $due_date_db_nepal = (new DateTime($due_date_npt))->format('Y-m-d H:i:s');
+                
                 // Insert the record into the issue table
                 $sql_issue = "INSERT INTO issue (book_id, member_id, issue_date, status, duedate, borrowing_id)
-                             VALUES ('$book_id', '$member_id', '$issue_date_db', 'issued', '$due_date_db', '$request_id')";
+                              VALUES ('$book_id', '$member_id', '$issue_date_db_nepal', 'issued', '$due_date_db_nepal', '$request_id')";
 
                 if ($conn->query($sql_issue) === TRUE) {
                     // After inserting into issue table, update the books table to decrement quantity_available by 1

@@ -74,40 +74,39 @@ include '../includes/connection.php';
 }
 </style>
 <?php
-$query = "SELECT * FROM books WHERE book_id = ?";
-$stmt = $conn->prepare($query);
-$stmt->bind_param("i", $_GET['b_id']);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-
-
 if (isset($_GET['b_id'])) {
-    
     $bookId = $_GET['b_id'];
-   
-    $_SESSION['b_id'] = $bookId; 
 
-    
-    $bookId = $row['book_id'];
-    $title = $row['title'];
-    $author = $row['author'];
-    $pub_date = $row['publication_date'];
-    $isbn = $row['ISBN'];
-    $quantity = $row['quantity_available'];
-    $category = $row['category'];
-    $photo=$row['photo'];
-    $description=$row['description'];
-  
-    
-    $buttonLabel = 'Update';
-    $formAction = 'all_action.php?id=' . $bookId;
+    $query = "SELECT * FROM books WHERE book_id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $bookId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+
+        $title = $row['title'];
+        $author = $row['author'];
+        $pub_date = $row['publication_date'];
+        $isbn = $row['ISBN'];
+        $quantity = $row['quantity_available'];
+        $category_id = $row['category_id'];
+        $publisher_id = $row['publisher_id'];
+        $description = $row['description'];
+        $photo = $row['photo'];
+
+      
+        
+    } else {
+        echo "Book not found.";
+    }
+
+    $stmt->close();
 } 
-
-}
 ?>
+
+
 <div class="main-body">
     <div class="login-container">          
         <h2>Add Books</h2>
@@ -117,23 +116,56 @@ if (isset($_GET['b_id'])) {
                 <input type="text" class="form-control" id="title" name="title" value="<?php echo isset($title) ? $title : ''; ?>" required>
             </div>
             <div class="form-group">
+    <input type="hidden" name="b_id" value="<?php echo isset($bookId) ? $bookId : ''; ?>">
+</div>
+            <div class="form-group">
                 <label for="author">Author</label>
                 <input type="text" class="form-control" id="author" name="author" value="<?php echo isset($author) ? $author : ''; ?>" required>
                 
             </div>
             <div class="form-group">
-    <label for="category">Genre</label>
-    <div class="form-check">
-    <input type="radio" class="" id="fiction" name="category" value="Fiction" <?php echo isset($category) && $category === 'Fiction' ? 'checked' : ''; ?> required>
-<label class="form-check-label" for="fiction">Fiction</label>
-<input type="radio" class="" id="non-fiction" name="category" value="Non-Fiction" <?php echo isset($category) && $category === 'Non-Fiction' ? 'checked' : ''; ?>>
-<label class="form-check-label" for="non-fiction">Non-Fiction</label>
-    </div>
-    <div class="form-check">
-        
-    </div>
-    
+    <label for="category">Category</label>
+    <select class="form-control" id="category" name="category" required>
+        <option value="" >Select a Category</option>
+        <?php
+        $categoryQuery = "SELECT * FROM Category";
+        $categoryResult = $conn->query($categoryQuery);
+
+        while ($categoryRow = $categoryResult->fetch_assoc()) {
+            $categoryId = $categoryRow['category_id'];
+            $categoryName = $categoryRow['name'];
+            $selected = ($category_id == $categoryId) ? 'selected' : '';
+            echo '<option value="' . $categoryId . '" ' . $selected . '>' . $categoryName . '</option>';
+        }
+        ?>
+    </select>
 </div>
+
+
+
+
+
+
+<!-- Publisher Selection -->
+<div class="form-group">
+    <label for="publisher">Publisher</label>
+    <select class="form-control" id="publisher" name="publisher" required>
+        <option value="" >Select a Publisher</option>
+        <?php
+        $publisherQuery = "SELECT * FROM Publisher";
+        $publisherResult = $conn->query($publisherQuery);
+
+        while ($publisherRow = $publisherResult->fetch_assoc()) {
+            $publisherId = $publisherRow['publisher_id'];
+            $publisherName = $publisherRow['name'];
+            $selected = ($publisher_id == $publisherId) ? 'selected' : '';
+            echo '<option value="' . $publisherId . '" ' . $selected . '>' . $publisherName . '</option>';
+        }
+        ?>
+    </select>
+</div>
+
+
 
             <div class="form-group">
                 <label for="p_date">Publication Date</label>
@@ -148,19 +180,24 @@ if (isset($_GET['b_id'])) {
                 <input type="text" class="form-control" id="quantity" name="quantity" value="<?php echo isset($quantity) ? $quantity : ''; ?>" required>
             </div>
 
-            <div class="form-group">
+<div class="form-group">
+    <label for="description">Description:</label>
+    <textarea name="description" class="form-control" id="description" rows="5" cols="50" placeholder="Give Description"><?php echo isset($description) ? $description : ''; ?></textarea>
+</div>
 
-                    <label for="description">Description:</label>
-                  <textarea name="description" class="form-control" id="description" value="<?php echo isset($description) ? $description : ''; ?>" name="description" rows="5" cols="50" placeholder="Give Description" ></textarea>
-                
-            </div>
             <div class="form-group">
-    <label for="image">Image</label>
+    <label for="image">Image</label> <?php
+    if(isset($photo)){
+        echo '<span style="color:green;">Photo Chosen</span>';
+
+    }
+    ?>
     <input type="file" class="form-control" id="image" name="image" accept="image/*">
+   
 </div>
             <?php
             if(isset($bookId)){
-                echo '<button type="submit" name="update_books" style="margin-top: 20px;" class="btn">' . $buttonLabel . '</button>';
+                echo '<button type="submit" name="update_books" style="margin-top: 20px;" class="btn">Update</button>';
             }
 
             else{

@@ -20,12 +20,11 @@ if ($result->num_rows > 0) {
 $dueTimestamp = strtotime($dueDate); // Convert due date to timestamp
 
 $fine = max(0, floor(($currentTimestamp - $dueTimestamp) / (60 * 60 * 24)) * 100);
+$return_date = date("Y-m-d");
 
     // Insert into fine table if fine is applicable
     if ($fine > 0) {
-        $kathmandu_tz = new DateTimeZone('Asia/Kathmandu');
-        $return_date = (new DateTime('now', $kathmandu_tz))->format('Y-m-d');
-        
+       
         $sql_insert_fine = "INSERT INTO fine (member_id, amount, paid_status, fine_date) VALUES ('$member_id', '$fine', 1, '$return_date')";
         if (!$conn->query($sql_insert_fine)) {
             echo "Error inserting into fine table: " . $conn->error;

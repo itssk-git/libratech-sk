@@ -28,7 +28,10 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
        
         require_once '../includes/connection.php';
         
-        $sql = "SELECT * FROM books WHERE quantity_available=0";
+        $sql = "SELECT b.*, c.name AS category_name, p.name AS publisher_name
+        FROM books AS b
+      JOIN category AS c ON b.category_id = c.category_id
+         JOIN publisher AS p ON b.publisher_id = p.publisher_id WHERE quantity_available=0";
         $books = $conn->query($sql);
 
         echo'<div class="row" id="bookCards">';
@@ -48,15 +51,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
             echo '<div class="des">';
             echo '<span>' . $book['title'] . '</span>';
             echo '<h5>' . $book['author'] . '</h5>';
-            echo '<h5 class="card-text">Genre: ' . $book['category'] . '</h5>';
-            echo '</div>';
-            echo '<div class="star">';
-            echo '<i class="fa fa-star"></i>';
-            echo '<i class="fa fa-star"></i>';
-            echo '<i class="fa fa-star"></i>';
-            echo '<i class="fa fa-star"></i>';
-            echo '<i class="fa fa-star"></i>';
-            echo '</div>';
+            echo '<h5 class="card-text">Genre: ' . $book['category_name'] . '</h5>';
+            
             echo '</a>';
             echo '</div>';
             echo '</div>';
@@ -83,7 +79,10 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
        
         require_once '../includes/connection.php';
         
-        $sql = "SELECT * FROM books WHERE quantity_available>0";
+        $sql = "SELECT b.*, c.name AS category_name, p.name AS publisher_name
+        FROM books AS b
+      JOIN category AS c ON b.category_id = c.category_id
+         JOIN publisher AS p ON b.publisher_id = p.publisher_id WHERE quantity_available>0";
         $books = $conn->query($sql);
 
         echo'<div class="row" id="bookCards">';
@@ -103,15 +102,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
             echo '<div class="des">';
             echo '<span>' . $book['title'] . '</span>';
             echo '<h5>' . $book['author'] . '</h5>';
-            echo '<h5 class="card-text">Genre: ' . $book['category'] . '</h5>';
+            echo '<h5 class="card-text">Genre: ' . $book['category_name'] . '</h5>';
             echo '</div>';
-            echo '<div class="star">';
-            echo '<i class="fa fa-star"></i>';
-            echo '<i class="fa fa-star"></i>';
-            echo '<i class="fa fa-star"></i>';
-            echo '<i class="fa fa-star"></i>';
-            echo '<i class="fa fa-star"></i>';
-            echo '</div>';
+           
             echo '</a>';
             echo '</div>';
             echo '</div>';

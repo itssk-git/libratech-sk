@@ -92,15 +92,10 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
                             <div class="des">
                                 <span >${book.title}</span>
                                 <h5 >${book.author}</p>
-                                <h5 class="card-text">Genre: ${book.category}</h5>
+                                <h5 class="card-text">Genre: ${book.category_name}</h5>
+                                
                             </div>
-                            <div class="star">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                        </div>
+                            
                         </a>
                            
                         </div>

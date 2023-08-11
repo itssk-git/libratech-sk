@@ -111,16 +111,22 @@ input{
 if (isset($_GET['search_btn'])) {
   $book = $_GET['search_book'];
 
-  $sql = "SELECT * FROM books WHERE title LIKE '%$book%'";
+  $sql = "SELECT b.*, c.name AS category_name, p.name AS publisher_name 
+          FROM books AS b
+           JOIN Category AS c ON b.category_id = c.category_id
+           JOIN Publisher AS p ON b.publisher_id = p.publisher_id
+          WHERE b.title LIKE '%$book%'";
   $result = $conn->query($sql);
-}
-else{
-$select_books = "SELECT * FROM books";
+} else {
+  $select_books = "SELECT b.*, c.name AS category_name, p.name AS publisher_name 
+                   FROM books AS b
+                    JOIN Category AS c ON b.category_id = c.category_id
+                  JOIN Publisher AS p ON b.publisher_id = p.publisher_id";
 
-
-$result = $conn->query($select_books);
+  $result = $conn->query($select_books);
 }
-if($result){
+
+if ($result){
 
 
 if ($result->num_rows > 0) {
@@ -133,6 +139,7 @@ if ($result->num_rows > 0) {
            
             <th>Quantity Available</th>
             <th>Category</th>
+            <th>Publication</th>
             <th>Edit</th>
             <th>Delete</th>
           </tr>";
@@ -145,7 +152,8 @@ if ($result->num_rows > 0) {
         echo "<td>".$row['author']."</td>";
       
         echo "<td>".$row['quantity_available']."</td>";
-        echo "<td>".$row['category']."</td>";
+        echo "<td>".$row['category_name']."</td>";
+        echo "<td>".$row['publisher_name']."</td>";
        
         echo "<td>
         <a href='add_books.php?b_id=".$row['book_id']."' class='btn btn-success'>Edit</a>

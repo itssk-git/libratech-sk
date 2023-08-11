@@ -245,17 +245,17 @@ a:hover{
             <span class="nav-item">Home</span>
           </a></li>
 
-        <li><a href="user_details.php">
-          <i class="fas fa-user"></i>
-          <span class="nav-item">Members</span>
+        <li><a href="add_category.php">
+          <i class="fas fa-book"></i>
+          <span class="nav-item">Add Category</span>
         </a></li>
         <li><a href="add_books.php">
           <i class="fas fa-book"></i>
           <span class="nav-item">Add Books</span>
         </a></li>
-        <li><a href="book_issued.php">
-            <i class="fas fa-exclamation-circle"></i>
-          <span class="nav-item">Issued</span>
+        <li><a href="add_publisher.php">
+            <i class="fas fa-book"></i>
+          <span class="nav-item">Add Publisher</span>
         </a></li>
         <li><a href="return_book.php">
           <i class="fas fa-thumbs-up"></i>

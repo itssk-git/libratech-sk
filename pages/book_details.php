@@ -22,7 +22,11 @@ if (isset($_GET['book_id'])) {
     $product_id = $_GET['book_id'];
 
     // Fetch the book details using a SQL query
-    $sql = "SELECT * FROM books WHERE book_id = $product_id";
+    $sql = "SELECT b.*, c.name AS category_name, p.name AS publisher_name
+    FROM books AS b
+  JOIN category AS c ON b.category_id = c.category_id
+     JOIN publisher AS p ON b.publisher_id = p.publisher_id
+      WHERE book_id = $product_id";
     $result = mysqli_query($conn, $sql);
 
     if ($result && mysqli_num_rows($result) > 0) {
@@ -338,20 +342,15 @@ if (isset($_GET['book_id'])) {
 
         ?>
         <img src="<?= $book['photo'] ?>" alt="Book Photo">
-        <div class="star">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                        </div>
+        
         
     </div>
 
     <div class="single-pro-details">
         <h2><?= $book['title'] ?></h2>
         <p class="h5" style="font-weight:200; font-size:15px">By: <?= $book['author'] ?></p>
-        <p class="h5" style="font-weight:200; font-size:15px">Genre: <?= $book['category'] ?></p>
+        <p class="h5" style="font-weight:200; font-size:15px">Genre: <?= $book['category_name'] ?></p>
+        <p class="h5" style="font-weight:200; font-size:15px">Publisher: <?= $book['publisher_name'] ?></p>
         <form action="book_reserve.php" method="get">
 
   <input type="hidden" name="book_id" value="<?= $book['book_id']; ?>">

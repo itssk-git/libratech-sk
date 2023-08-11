@@ -14,24 +14,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['user_type'])) {
 }
 ?>
 
-<?php
 
-if(isset($_SESSION['username'])){
-    if($_SESSION['user_type']=='admin'){
-        
-        header('location: /lms/admin/dashboard.php');
-        exit();
-
-
-    }
-    else{
-        header('location: /lms/pages/books.php');
-
-
-    }
-}
-
-?>
 
 
 

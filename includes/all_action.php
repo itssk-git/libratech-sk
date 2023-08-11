@@ -95,36 +95,43 @@ if (isset($_POST['login'])) {
 
 
 
+
+
+
 if (isset($_POST['add_books'])) {
     session_start();
-
     $title = $_POST['title'];
     $author = $_POST['author'];
     $category = $_POST['category'];
+    $publisher = $_POST['publisher'];
     $p_date = $_POST['p_date'];
     $isbn = $_POST['isbn'];
     $quantity = $_POST['quantity'];
+    $description = $_POST['description'];
     $photo = $_FILES['image']['tmp_name'];
-    $description = $_POST['description']; // Corrected typo here
     $photoContent = file_get_contents($photo);
 
-    // Add database connection and error handling here if not already included
-
-    // Use prepared statement to prevent SQL injection
-    $sql = "INSERT INTO books (title, author, publication_date, ISBN, quantity_available, category, photo, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssssss", $title, $author, $p_date, $isbn, $quantity, $category, $photoContent, $description);
+    $insertBookQuery = "INSERT INTO books (title, author, category_id, publisher_id, publication_date, ISBN, quantity_available, description, photo) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($insertBookQuery);
+    $stmt->bind_param("ssiiisiss", $title, $author, $category, $publisher, $p_date, $isbn, $quantity, $description, $photoContent);
 
     if ($stmt->execute()) {
-        $_SESSION['status'] = 'Books Added Successfully';
+        $_SESSION['status'] = 'Book Added Successfully';
         header('Location:../admin/show_books.php');
         exit();
     } else {
-        $_SESSION['status'] = 'Adding Failed: ' . $conn->error;
+        $_SESSION['status'] = 'Adding Failed: ' . $stmt->error;
         header('Location:../admin/show_books.php');
         exit();
     }
+
+    $stmt->close();
 }
+
+$conn->close();
+
+
 
 
 
@@ -163,34 +170,61 @@ if(isset($_POST['update_user'])){
 
 
 
-if (isset($_POST['update_books'])) {
-    session_start();
 
-    $bookId = $_SESSION['b_id'];
-    $title = $_POST['title'];
-    $author = $_POST['author'];
+
+
+
+
+
+if (isset($_POST['update_books'])) {
+    include 'connection.php';
+    session_start();
+    $bookId = $_POST['b_id'];
+    $title = mysqli_real_escape_string($conn, $_POST['title']);
+    $author = mysqli_real_escape_string($conn, $_POST['author']);
+    $category_id = $_POST['category'];
+    $publisher_id = $_POST['publisher'];
     $pub_date = $_POST['p_date'];
     $isbn = $_POST['isbn'];
     $quantity = $_POST['quantity'];
-    $category = $_POST['category'];
-    $photo = $_FILES['image']['tmp_name'];
-    $photoContent = file_get_contents($photo);
+    $description = $_POST['description'];
+    $description = mysqli_real_escape_string($conn, $description);
 
-    
-    if ($_FILES['image']['error'] === UPLOAD_ERR_NO_FILE) {
-        
-        $sql = "UPDATE books SET title=?, author=?, publication_date=?, ISBN=?, quantity_available=?, category=? WHERE book_id=?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssssi", $title, $author, $pub_date, $isbn, $quantity, $category, $bookId);
+    // Handle image upload
+    if (!empty($_FILES['image']['name'])) {
+        $imageFileName = $_FILES['image']['name'];
+        $targetDir = "../images/"; // Specify your target directory
+        $targetFilePath = $targetDir . $imageFileName;
+
+        // Move uploaded image to target directory
+        if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFilePath)) {
+            // Image uploaded successfully, proceed with update
+            $imageUploadStatus = "success";
+        } else {
+            // Error uploading image
+            $imageUploadStatus = "error";
+            $_SESSION['status'] = 'Image upload failed';
+            header('Location:../admin/show_books.php');
+            exit();
+        }
     } else {
-        
-        $sql = "UPDATE books SET title=?, author=?, publication_date=?, ISBN=?, quantity_available=?, category=?, photo=? WHERE book_id=?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssssi", $title, $author, $pub_date, $isbn, $quantity, $category, $photoContent, $bookId);
+        // No new image uploaded
+        $imageUploadStatus = "no_image";
     }
 
-    if ($stmt->execute()) {
-        $_SESSION['status'] = 'Books Updated Successfully';
+    // Construct the SQL query
+    $sql = "UPDATE books 
+            SET title='$title', author='$author', category_id='$category_id', publisher_id='$publisher_id', publication_date='$pub_date', ISBN='$isbn', quantity_available='$quantity', description='$description'";
+    
+    if ($imageUploadStatus === "success") {
+        $sql .= ", image='$imageFileName'";
+    }
+    
+    $sql .= " WHERE book_id='$bookId'";
+
+    // Execute the query
+    if ($conn->query($sql) === TRUE) {
+        $_SESSION['status'] = 'Book Updated Successfully';
         header('Location:../admin/show_books.php');
         exit();
     } else {
@@ -201,3 +235,107 @@ if (isset($_POST['update_books'])) {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+if (isset($_POST['add_category'])) {
+    include 'connection.php';
+    $categoryName = $_POST['category'];
+
+    $insertQuery = "INSERT INTO Category (name) VALUES (?)";
+    $stmt = $conn->prepare($insertQuery);
+    $stmt->bind_param("s", $categoryName);
+
+    if ($stmt->execute()) {
+        // Category added successfully
+        header("Location: ../admin/add_category.php");
+        exit();
+    } else {
+        // Error handling
+        echo "Error: " . $stmt->error;
+    }
+
+    $stmt->close();
+}
+
+
+
+
+if (isset($_POST['add_publisher'])) {
+    include 'connection.php';
+    $publisherName = $_POST['publisher'];
+    $location = $_POST['location'];
+
+    // Construct the SQL query
+    $insertQuery = "INSERT INTO Publisher (name, location) VALUES ('$publisherName', '$location')";
+
+    // Execute the query
+    if ($conn->query($insertQuery) === TRUE) {
+        // Publisher added successfully
+        header("Location: ../admin/add_publisher.php");
+        exit();
+    } else {
+        // Error handling
+        echo "Error: " . $conn->error;
+    }
+}
+
+
+
+?>
+<?php
+session_start();
+include 'connection.php';
+
+if (isset($_POST['update_category'])) {
+    // Handle updating category here
+    $categoryName = $_POST['category'];
+    $categoryId = $_POST['c_id']; 
+
+    // Perform the database update for updating the category
+    $sql = "UPDATE category SET name = '$categoryName' WHERE category_id = '$categoryId'";
+    if ($conn->query($sql)) {
+        
+        header("Location: /lms/admin/add_category.php"); // Redirect to the appropriate page after updating
+        exit();
+    } else {
+        echo "Error updating category: " . $conn->error;
+        exit();
+    }
+} else {
+    // Handle other actions or show an error message
+}
+$conn->close();
+?>
+
+
+<?php
+include 'connection.php';
+
+if (isset($_POST['update_publisher'])) {
+    $publisherId = $_POST['c_id'];
+    $publisherName = $_POST['publisher'];
+    $location = $_POST['location'];
+
+    // Perform the database update for updating the publisher
+    $sql = "UPDATE publisher SET name = '$publisherName', location = '$location' WHERE publisher_id = '$publisherId'";
+    if ($conn->query($sql)) {
+        // Publisher updated successfully
+        header("Location: /lms/admin/add_publisher.php");
+    } else {
+        echo "Error updating publisher: " . $conn->error;
+    }
+}
+
+$conn->close();
+?>
